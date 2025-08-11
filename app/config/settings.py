@@ -129,5 +129,4 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_URL = "accounts:login"
-#LOGIN_REDIRECT_URL = "attendance:worklog_list"  # 任意
 LOGOUT_REDIRECT_URL = "accounts:login" 

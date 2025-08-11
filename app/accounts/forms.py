@@ -34,9 +34,8 @@ class AddUserForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # 上司の候補は全社員
+        # 上司の候補は全社員から選べるよ
         self.fields["manager"].queryset = User.objects.all()
-        # 初期値は空のラベルで設定
         self.fields["manager"].empty_label = "（上司を選択）"
 
     def clean_email(self):
