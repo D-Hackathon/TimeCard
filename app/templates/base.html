@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>働ログ</title>
+</head>
+<body>
+  <header>
+    <nav>
+      {% if user.is_authenticated %}
+        <span>ようこそ、{{ user.username }} さん</span>
+        <form method="post" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button type="submit">ログアウト</button>
+        </form>
+      {% else %}
+        <a href="{% url 'accounts:login' %}">ログイン</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main>
+    {% if messages %}
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>働ログ</p>
+  </footer>
+</body>
+</html>
