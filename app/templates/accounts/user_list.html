@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>ユーザー一覧</h1>
+
+<form method="get">
+  <input type="text" name="q" value="{{ request.GET.q }}" placeholder="検索（氏名/社員ID/メール）">
+  <button type="submit">検索</button>
+</form>
+
+<p><a href="{% url 'accounts:add_user' %}">新規ユーザー作成</a></p>
+
+<table border="1" cellpadding="6">
+  <thead>
+    <tr>
+      <th>氏名（username）</th>
+      <th>社員ID</th>
+      <th>メール</th>
+      <th>上司</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+      <tr>
+        <td>{{ u.username }}</td>
+        <td>{{ u.employee_id }}</td>
+        <td>{{ u.email }}</td>
+        <td>{% if u.manager %}{{ u.manager.username }}{% else %}-{% endif %}</td>
+        <td>
+          <a href="{% url 'accounts:edit_user' u.pk %}">編集</a> /
+          <a href="{% url 'accounts:delete_user' u.pk %}">削除</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5">ユーザーがいません。</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if is_paginated %}
+  <div>
+    {% if page_obj.has_previous %}
+      <a href="?q={{ request.GET.q }}&page={{ page_obj.previous_page_number }}">前へ</a>
+    {% endif %}
+    <span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a href="?q={{ request.GET.q }}&page={{ page_obj.next_page_number }}">次へ</a>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

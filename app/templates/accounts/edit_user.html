@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>ユーザー編集</h1>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">更新</button>
+</form>
+
+<p><a href="{% url 'accounts:user_list' %}">一覧に戻る</a></p>
+{% endblock %}
