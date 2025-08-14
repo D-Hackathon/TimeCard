@@ -1,0 +1,34 @@
+{% load static %}
+{% extends "base.html" %}
+{% block title %}働ログ{% endblook %}
+{% block page_title %}マイページ{% endblock %}
+{% block header_actions %}
+    <a href="{% url <!--確認--> %}">
+        <img src="{% static 'img/profile_icon.png' %}" width="50" height="50">
+    </a>
+{% endblock %}
+
+{% block content %}
+    <section>
+        <form method="post" action="{% url <!--確認--> %}">{% csrf_token %}
+            <button type="submit">開始</button>
+        </form>
+        <form method="post" action="{% url <!--確認--> %}">{% csrf_token %}
+            <button type="submit">終了</button>
+        </form>
+        <form method="post" action="{% url <!--確認--> %}">{% csrf_token %}
+            <button type="submit">退勤</button>
+        </form>
+    </section>
+
+    <section>
+        <!--カレンダ-->
+    </section>
+
+    <p>今月の勤務実績<!--ここに関数--></p>
+
+    <form method="post" action="{% url <!--確認--> %}">
+        {% csrf_token %}
+        <button type="submit">ログアウト</button>
+    </form>
+{% endblock %}
