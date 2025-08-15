@@ -1,0 +1,40 @@
+{% load static %}
+{% extends "base.html" %}
+{% block title %}個人情報{% endblock %}
+{% block header_actions %}
+    <a href="{% url <!--確認--> %}">
+        <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
+    </a>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            <label>メールアドレス(現在)</label>
+            <p>{{ <!--確認--> }}</p>
+        </div>
+
+        <div>
+            <label>メールアドレス(変更)</label>
+            <input id="email_new" type="email" name="<!--確認-->">
+        </div>
+
+        <div>
+            <label>パスワード(現在)</label>
+            <p>{{ <!--確認--> }}</p>
+        </div>
+
+        <div>
+            <label>パスワード(変更)</label>
+            <input id="pw_new" type="password" name="<!--確認-->">
+        </div>
+
+        <div>
+            <label>パスワード(確認)</label>
+            <input id="pw_confirm" type="password" name="<!--確認-->">
+        </div>
+
+        <button type="submit">登録</button>
+    </form>
+{% endblock %}
