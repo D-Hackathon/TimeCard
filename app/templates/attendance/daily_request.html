@@ -1,0 +1,17 @@
+{% extends "base_attendance.html" %}
+{% block title %}日次申請{% endblock %}
+{% block page_title %}<!--日付を出す-->{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'attendance:mypage' %}">
+        <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
+    </a>
+{% endblock %}
+
+{% block content %}
+<p>本日の勤務実績<!--関数確認--></p>
+
+<form method="post" action="{% url <!--確認--> %}">
+    {% csrf_token %}
+
+    <div>
+        <label>勤務実績1</label>

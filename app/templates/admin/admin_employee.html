@@ -1,0 +1,60 @@
+{% extends "base_admin.html" %}
+{% block title %}新規社員登録{% endblock %}
+{% block page_title %}新規社員登録{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'attendance:mypage' %}">
+        <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
+    </a>
+{% endblock %}
+
+{% block content %}
+    <form method="post" action="{% url <!--確認--> %}">
+        {% csrf_token%}
+
+        <div class="form-row">
+            <label>社員ID
+                <input name="employee_code" type="text" placeholder="入力してください" required>
+            </label>
+        </div>
+
+            <div class="form-row">
+            <label>名前
+                <input name="name" type="text" placeholder="入力してください" required>
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>メールアドレス
+                <input name="email" type="email" placeholder="入力してください" required>
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>メールアドレス 確認
+                <input name="email_confirm" type="email" placeholder="入力してください" required>
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>上司ID
+                <input name="manager_id" type="text" placeholder="入力してください" required>
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>初期パスワード
+                <input name="password" type="password" placeholder="入力してください" required>
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>初期パスワード 確認
+                <input name="password_confirm" type="password" placeholder="入力してください" required>
+            </label>
+        </div>
+
+        <div id="registration">
+            <button type="submit">登録</button>
+        </div>
+    </form>
+{% endblock %}
