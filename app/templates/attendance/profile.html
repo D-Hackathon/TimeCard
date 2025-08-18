@@ -1,8 +1,8 @@
-{% load static %}
-{% extends "base.html" %}
+{% extends "base_attendance.html" %}
 {% block title %}個人情報{% endblock %}
+{% block page_title %}個人情報{% endblock %}
 {% block header_actions %}
-    <a href="{% url <!--確認--> %}">
+    <a href="{% url attendance:mypage %}">
         <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
     </a>
 {% endblock %}
@@ -21,18 +21,18 @@
         </div>
 
         <div>
-            <label>パスワード(現在)</label>
+            <label>パスワード 現在</label>
             <p>{{ <!--確認--> }}</p>
         </div>
 
         <div>
-            <label>パスワード(変更)</label>
-            <input id="pw_new" type="password" name="<!--確認-->">
+            <label>パスワード 変更</label>
+            <input id="password_new" type="password" name="<!--確認-->">
         </div>
 
         <div>
-            <label>パスワード(確認)</label>
-            <input id="pw_confirm" type="password" name="<!--確認-->">
+            <label>パスワード 確認</label>
+            <input id="password_confirm" type="password" name="<!--確認-->">
         </div>
 
         <button type="submit">登録</button>
