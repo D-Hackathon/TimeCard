@@ -1,9 +1,8 @@
-{% load static %}
-{% extends "base.html" %}
-{% block title %}働ログ{% endblook %}
+{% extends "base_attendance.html" %}
+{% block title %}マイページ{% endblock %}
 {% block page_title %}マイページ{% endblock %}
 {% block header_actions %}
-    <a href="{% url <!--確認--> %}">
+    <a href="{% url 'attendance:profile' %}">
         <img src="{% static 'img/profile_icon.png' %}" width="50" height="50">
     </a>
 {% endblock %}

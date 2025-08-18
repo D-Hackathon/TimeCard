@@ -1,0 +1,14 @@
+{% extends "base_admin.html" %}
+{% block title %}社員変更・削除{% endblock %}
+{% block page_title %}社員変更・削除{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'attendance:mypage' %}">
+        <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
+    </a>
+{% endblock %}
+
+{% block content %}
+    <form method="get" action="{% <!--確認--> %}">
+        <div class="form-row">
+            <label>社員検索
+                <input name="search" type="text" placeholder="社員ID または 名前を入力してください">
