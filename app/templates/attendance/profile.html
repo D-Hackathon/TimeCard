@@ -1,8 +1,12 @@
+<!--https://gray-code.com/html_css/setting-cant-enterd-text-to-input-element/-->
+
 {% extends "base_attendance.html" %}
+{% load static %}
+
 {% block title %}個人情報{% endblock %}
 {% block page_title %}個人情報{% endblock %}
 {% block header_actions %}
-    <a href="{% url attendance:mypage %}">
+    <a href="{% url "attendance:mypage" %}">
         <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
     </a>
 {% endblock %}
@@ -12,27 +16,31 @@
         {% csrf_token %}
         <div>
             <label>メールアドレス(現在)</label>
-            <p>{{ <!--確認--> }}</p>
+            <input type="email" value="{{ request.user.email }}" disabled class="form-control">
         </div>
 
         <div>
             <label>メールアドレス(変更)</label>
-            <input id="email_new" type="email" name="<!--確認-->">
-        </div>
-
-        <div>
-            <label>パスワード 現在</label>
-            <p>{{ <!--確認--> }}</p>
+            {{ form.email }}
+            {% if form.email.errors %}
+            <div class="error">{{ form.email.errors }}</div> <!--入力されたメールアドレスに異常があった場合、エラー出力する-->
+            {% endif %}
         </div>
 
         <div>
             <label>パスワード 変更</label>
-            <input id="password_new" type="password" name="<!--確認-->">
+            {{ form.password }}
+            {% if form.password.errors %}
+            <div class="error">{{ form.password.errors }}</div>
+            {% endif %}
         </div>
 
         <div>
             <label>パスワード 確認</label>
-            <input id="password_confirm" type="password" name="<!--確認-->">
+            {{ form.password_confirm }}
+            {% if form.password_confirm.errors %}
+            <div class="error">{{ form.password_confirm.errors }}</div>
+            {% endif %}
         </div>
 
         <button type="submit">登録</button>

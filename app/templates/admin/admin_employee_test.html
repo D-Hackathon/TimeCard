@@ -1,0 +1,26 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block title %}新規社員登録{% endblock %}
+{% block page_title %}新規社員登録{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'attendance:mypage' %}">
+        <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
+    </a>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+  {% csrf_token %}
+  {% for field in form %}
+    <p>
+      {{ field.label_tag }}
+      {{ field }}
+      {% if field.errors %}
+        <div class="error">{{ field.errors }}</div>
+      {% endif %}
+    </p>
+  {% endfor %}
+  <button type="submit">登録</button>
+</form>
+{% endblock %}

@@ -17,8 +17,7 @@ class LoginView(FormView):
     form_class = LoginForm
     #　ログイン後の画面は２種類あるので、分岐させる。
     success_url = reverse_lazy("accounts:user_list") # 後ほど変更
-    admin_url = reverse_lazy("accounts:add_user")
-
+    admin_url = reverse_lazy("accounts:add_user") #後ほど変更
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

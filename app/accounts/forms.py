@@ -41,6 +41,20 @@ class AddUserForm(UserCreationForm):
     def clean_email(self):
         return self.cleaned_data["email"].strip().lower()
 
+class EmployeeSearchForm(forms.Form):
+    employee_id = forms.CharField(label="社員ID", required=False)
+    name = forms.CharField(label="名前", required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        employee_id = cleaned_data.get("employee_id")
+        name = cleaned_data.get("name")
+
+        if not employee_id and not name:
+            raise forms.ValidationError("社員IDまたは名前のいずれかを入力してください。")
+
+        return cleaned_data
+
 class EditUserForm(forms.ModelForm):
     class Meta:
         model = User
