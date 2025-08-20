@@ -1,7 +1,9 @@
 from django import forms
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate,get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from .models import User
+
+User = get_user_model()
 
 def is_manager(user):
     return User.objects.filter(manager=user).exists()
@@ -28,18 +30,69 @@ class LoginForm(forms.Form):
         return cleaned_data
 
 class AddUserForm(UserCreationForm):
+    email_confirm = forms.EmailField(label="メールアドレス確認")
+    manager_employee_id = forms.CharField(
+        label="上司ID",
+        required=False,
+    )
+
     class Meta:
         model = User
-        fields = ("username", "employee_id", "email", "manager")
+        fields = ("username", "employee_id", "email")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # 上司の候補は全社員から選べるよ
-        self.fields["manager"].queryset = User.objects.all()
-        self.fields["manager"].empty_label = "（上司を選択）"
+
+        # ラベル名の調整
+        self.fields["password1"].label = "初期パスワード"
+        self.fields["password2"].label = "初期パスワード確認"
+
+        field_order = [
+            "username",
+            "employee_id",
+            "email",
+            "email_confirm",
+            "manager_employee_id",
+            "password1",
+            "password2",
+        ]
+        self.order_fields(field_order)
 
     def clean_email(self):
         return self.cleaned_data["email"].strip().lower()
+
+    # メールと上司IDの検証工程を新設
+    def clean(self):
+        cleaned = super().clean()
+
+        email = cleaned.get("email")
+        email_confirm = cleaned.get("email_confirm")
+        if email and email_confirm and email != email_confirm:
+            self.add_error("email_confirm", "メールアドレスが一致しません。")
+
+        # 上司ID。手入力に対応したことにより新設。ややこしい。。。
+        # 手入力された社員IDから User を取得。見つかったら一旦変数に格納。
+        manager_code = cleaned.get("manager_employee_id")
+        self._manager_id = None
+        if manager_code:
+            mgr = User.objects.filter(employee_id=manager_code).first()
+            if not mgr:
+                self.add_error("manager_employee_id", "指定した上司ID（社員ID）が見つかりません。")
+            else:
+                self._manager_id = mgr
+
+        return cleaned
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data["email"]
+
+        if getattr(self, "_manager_id", None):
+            user.manager = self._manager_id
+
+        if commit:
+            user.save()
+        return user
 
 class EmployeeSearchForm(forms.Form):
     employee_id = forms.CharField(label="社員ID", required=False)
