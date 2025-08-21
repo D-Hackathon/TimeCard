@@ -13,9 +13,11 @@ def is_manager(user):
     return User.objects.filter(manager=user).exists()
 
 class LoginView(FormView):
-    template_name = "accounts/login.html"
+    template_name = "accounts/login_test.html"
     form_class = LoginForm
-    success_url = reverse_lazy("accounts:add_user")
+    #　ログイン後の画面は２種類あるので、分岐させる。
+    success_url = reverse_lazy("accounts:user_list") # 後ほど変更
+    admin_url = reverse_lazy("accounts:add_user") #後ほど変更
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -24,8 +26,21 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         user = form.cleaned_data['user']
+        action = self.request.POST.get("action", "user")
         login(self.request, user)
-        return super().form_valid(form)
+
+        if action == "admin":
+            if self._test_func(user):
+                return redirect(self.admin_url)
+            messages.error(self.request, "管理者機能へのアクセス権限がありません。")
+            return redirect(self.success_url)
+        # 通常のユーザー画面へリダイレクト
+        return redirect(self.success_url)
+    
+    def _test_func(self, user):
+        # 管理者または上司設定がされているユーザーに限定する
+        # UserPassesTextMixinを使うと、通常のログインに支障が出るため、使わない。
+        return user.is_superuser or User.objects.filter(manager=user).exists()
     
     def dispatch(self, request, *args, **kwargs):
         # 既にログイン済みならリダイレクト
@@ -40,7 +55,7 @@ class LogoutView(View):
     
 
 class AdduserView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    template_name = "accounts/add_user.html"
+    template_name = "admin/admin_employee_test.html"
     form_class = AddUserForm
     success_url = reverse_lazy("accounts:add_user")
 
