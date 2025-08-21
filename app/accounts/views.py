@@ -13,7 +13,7 @@ def is_manager(user):
     return User.objects.filter(manager=user).exists()
 
 class LoginView(FormView):
-    template_name = "accounts/login.html"
+    template_name = "accounts/login_test.html"
     form_class = LoginForm
     #　ログイン後の画面は２種類あるので、分岐させる。
     success_url = reverse_lazy("accounts:user_list") # 後ほど変更
