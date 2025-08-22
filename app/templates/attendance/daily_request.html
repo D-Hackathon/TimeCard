@@ -13,5 +13,43 @@
 <form method="post" action="{% url <!--確認--> %}">
     {% csrf_token %}
 
-    <div>
-        <label>勤務実績1</label>
+    <input type="hidden" name ="date" value="{{<!--カレンダーで選択した日付に遷移したい-->}}">
+        <section>
+            <div>
+                <label>勤務実績1</label><br>
+                <input id="work1_start" name="work1_start" type="time" value="{{ work1_start|default:'' }}"> <!--この処理で勤務実績をDBから引っ張ってくる。もしなかったら空白を返す-->
+                <span>〜</span>
+                <input id="work1_end" name="work1_end" type="time" value="{{ work1_end|default:'' }}">
+                {{ work1_status|default:"pending" }} <!--申請中、否認、承認のstatusを取得-->
+            </div>
+        </section>
+
+        <section>
+            <div>
+                <label>勤務実績2</label><br>
+                <input id="work2_start" name="work2_start" type="time" value="{{ work2_start|default:'' }}"> <!--この処理で勤務実績をDBから引っ張ってくる。もしなかったら空白を返す-->
+                <span>〜</span>
+                <input id="work2_end" name="work2_end" type="time" value="{{ work2_end|default:'' }}">
+                {{ work2_status|default:"pending" }} <!--申請中、否認、承認のstatusを取得-->
+            </div>
+        </section>
+
+        <section>
+            <div>
+                <label>勤務実績3</label><br>
+                <input id="work3_start" name="work3_start" type="time" value="{{ work3_start|default:'' }}"> <!--この処理で勤務実績をDBから引っ張ってくる。もしなかったら空白を返す-->
+                <span>〜</span>
+                <input id="work3_end" name="work3_end" type="time" value="{{ work3_end|default:'' }}">
+                {{ work3_status|default:"pending" }} <!--申請中、否認、承認のstatusを取得-->
+            </div>
+        </section>
+
+        <section>
+            <label>備考欄</label><br>
+            <textarea id="note" name="note">{{ note|default:'' }}</textarea>
+        </section>
+
+        <p><button type="submit">登録</button></p>
+</form>
+{% endblock %}
+
