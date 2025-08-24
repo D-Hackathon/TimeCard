@@ -8,7 +8,54 @@
 {% endblock %}
 
 {% block content %}
-    <form method="get" action="{% <!--確認--> %}">
+    <form method="get" action="">
+        <label>社員検索</label>
+        <input type="text" name="query" placeholder="社員IDを入力してください" value="{{ request.GET.query|default:''}}"> <!--22日の打ち合わせで話していた通り、idで検索できるようにしてあります。-->
+        <button type="submit">検索</button>
+    </form>
+
+    <form method="post" action="">
+        {% csrf_token %}
+
         <div class="form-row">
-            <label>社員検索
-                <input name="search" type="text" placeholder="社員ID または 名前を入力してください">
+            <label>社員ID</label>
+            <input name="employee_code" type="text" placeholder="入力してください" value="{% if employee %}{{ employee.employee_code }}{% endif %}"> <!--value=の処理で検索結果を受け取ろうと思っています。以下の処理も同様です。-->
+        </div>
+
+        <div class="form-row">
+            <label>名前</label>
+            <input name="name" type="text" placeholder="入力してください" value="{% if employee %}{{ employee.name }}{% endif %}">
+        </div>
+
+        <div class="form-row">
+            <label>メールアドレス</label>
+            <input name="email" type="email" placeholder="入力してください" value="{% if employee %}{{ employee.email }}{% endif %}">
+        </div>
+
+        <div class="form-row">
+            <label>メールアドレス変更</label>
+            <input name="email_new" type="email" placeholder="入力してください">
+        </div>
+
+        <div class="form-row">
+            <label>上司ID</label>
+            <input name="manager_id" type="text" placeholder="入力してください" value="{% if employee %}{{ employee.manager_id }}{% endif %}">
+        </div>
+
+        <div class="form-row">
+            <label>パスワード変更</label>
+            <input name="password" type="password" placeholder="入力してください">
+        </div>
+
+        <div class="form-row">
+            <label>パスワード確認</label>
+            <input name="password_confirm" type="password" placeholder="入力してください">
+        </div>
+
+        <p>
+            <button id="update" type="submit" name="action" value="update">変更</button>
+            <button id="delete" type="submit" name="action" value="delete" onclick="return confirm('本当に削除しますか？');">社員削除</button>
+        </p>
+    </form>
+{% endblock %}
+
