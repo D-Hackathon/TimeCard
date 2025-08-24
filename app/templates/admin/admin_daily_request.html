@@ -1,0 +1,67 @@
+{% extends "base_admin.html" %}
+{% block title %}日次申請{% endblock %}
+{% block page_title %}日次申請{% endblock %}
+{% block header_actions %}
+    <a href="{% url 'attendance:mypage' %}">
+        <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
+    </a>
+{% endblock %}
+
+{% block content %}
+<p>本日の勤務実績<!--関数確認--></p>
+<form method="post" action="{% url <!--確認--> %}">
+    {% csrf_token %}
+
+    <input type="hidden" name ="date" value="{{<!--表で選択した日付に遷移したい-->}}">
+
+    <section>
+        <div>
+            <label>勤務実績1</label><br>
+            <input id="work1_start" name="work1_start" type="time" value="{{ work1_start|default:'' }}"> <!--この処理で勤務実績をDBから引っ張ってくる。もしなかったら空白を返す-->
+            <span>〜</span>
+            <input id="work1_end" name="work1_end" type="time" value="{{ work1_end|default:'' }}">
+            <select id="work1_status" name="work1_status">
+                <option value="pending"{% if work1_status == "pending" or not work1_status %} selected{% endif %}>申請中</option>
+                <option value="approved"{% if work1_status == "approved" %} selected{% endif %}>承認</option>
+                <option value="rejected"{% if work1_status == "rejected" %} selected{% endif %}>否認</option> 
+            </select>
+        </div>
+    </section>
+
+    <section>
+        <div>
+            <label>勤務実績2</label><br>
+            <input id="work2_start" name="work2_start" type="time" value="{{ work2_start|default:'' }}"> <!--この処理で勤務実績をDBから引っ張ってくる。もしなかったら空白を返す-->
+            <span>〜</span>
+            <input id="work2_end" name="work2_end" type="time" value="{{ work2_end|default:'' }}">
+            <select id="work2_status" name="work2_status">
+                <option value="pending"{% if work2_status == "pending" or not work2_status %} selected{% endif %}>申請中</option>
+                <option value="approved"{% if work2_status == "approved" %} selected{% endif %}>承認</option>
+                <option value="rejected"{% if work2_status == "rejected" %} selected{% endif %}>否認</option> 
+            </select>
+        </div>
+    </section>
+
+    <section>
+        <div>
+            <label>勤務実績3</label><br>
+            <input id="work3_start" name="work3_start" type="time" value="{{ work3_start|default:'' }}"> <!--この処理で勤務実績をDBから引っ張ってくる。もしなかったら空白を返す-->
+            <span>〜</span>
+            <input id="work3_end" name="work3_end" type="time" value="{{ work3_end|default:'' }}">
+            <select id="work3_status" name="work3_status">
+                <option value="pending"{% if work3_status == "pending" or not work3_status %} selected{% endif %}>申請中</option>
+                <option value="approved"{% if work3_status == "approved" %} selected{% endif %}>承認</option>
+                <option value="rejected"{% if work3_status == "rejected" %} selected{% endif %}>否認</option> 
+            </select>
+        </div>
+    </section>
+
+        <section>
+            <label>備考欄</label><br>
+            <textarea id="note" name="note">{{ note|default:'' }}</textarea>
+        </section>
+
+        <p><button type="submit">登録</button></p>
+</form>
+{% endblock %}
+
