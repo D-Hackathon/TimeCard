@@ -1,12 +1,12 @@
 from django.views.generic import FormView, CreateView, View, DeleteView, UpdateView, ListView
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout,update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
+from django.shortcuts import redirect,render
 from django.contrib import messages
-from django.db import models
+from django.db import models,transaction
 
-from .forms import LoginForm, AddUserForm, EditUserForm
+from .forms import LoginForm, AddUserForm, EditUserForm, EmployeeIdSearchForm
 from .models import User
 
 def is_manager(user):
@@ -145,3 +145,90 @@ class DeleteUserView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def handle_no_permission(self):
         messages.error(self.request, "ユーザー削除の権限がありません。")
         return redirect("accounts:login")
+    
+class userEditView(LoginRequiredMixin, UserPassesTestMixin, View):
+    template_name = r"admin/admin_edit_employee_test.html"
+    success_url = reverse_lazy("accounts:user_edit")
+
+    def test_func(self):
+        u = self.request.userC
+        return u.is_superuser or is_manager(u)
+
+    def handle_no_permission(self):
+        messages.error(self.request, "ユーザー編集の権限がありません。")
+        return redirect("accounts:login")
+
+    def get_queryset(self):
+        return User.objects.filter(is_active=True)
+
+    # 社員IDで検索して、編集フォームを表示する。
+    def get(self, request, *args, **kwargs):
+        search_form = EmployeeIdSearchForm(request.GET or None)
+        target = None
+        edit_form = None
+
+        if search_form.is_bound and search_form.is_valid(): # 社員検索フォームが送信され、かつ有効な場合
+            emp_id = search_form.cleaned_data["employee_id"] 
+            qs = self.get_queryset()
+            target = qs.filter(employee_id=emp_id).first()
+
+            if not target:
+                messages.error(f"社員ID「{emp_id}」は存在しません。")
+            else:
+                edit_form = EditUserForm(instance=target) # 編集フォームの表を準備する
+
+        return render(request, self.template_name, {
+            "search_form": search_form,
+            "target": target,
+            "edit_form": edit_form,
+        })
+
+    # 編集フォームが送信された場合の処理
+    def post(self, request):
+        action = request.POST.get("action", "update")
+        target_pk = request.POST.get("target")
+        if not target_pk:
+            messages.error(request, "対象ユーザーが指定されていません。")
+            return redirect(request.path)
+
+        target = self.get_queryset().filter(pk=target_pk).first()
+        if not target:
+            messages.error(request, "対象ユーザーが見つかりません。")
+            return redirect(request.path)
+
+        # 削除の場合
+        if action == "delete":
+            if target.pk == request.user.pk:
+                #削除後の挙動などを構築するのが面倒なので、自分は削除禁止。
+                messages.error(request, "自分自身は削除できません。")
+                return redirect(request.path)
+
+            try:
+                # トランザクションで実装。他にも使う場所あるはず
+                with transaction.atomic():
+                    target.is_active = False
+                    target.save(update_fields=["is_active"])
+                messages.success(request, f"ユーザー「{target.username}」を削除しました。")
+                return redirect(self.success_url)
+            except Exception as e:
+                messages.error(request, f"削除に失敗しました：{e}")
+                return redirect(request.path)
+
+        # 更新の場合
+        edit_form = EditUserForm(request.POST, instance=target)
+        search_form = EmployeeIdSearchForm(initial={"employee_id": target.employee_id})
+
+        if edit_form.is_valid():
+            password_changed = bool(edit_form.cleaned_data.get("password")) #パスワードが変更されたかをチェックする。
+            edit_form.save()
+            if password_changed and target.pk == request.user.pk:
+                # 自分のパスワードを変更した場合、セッション認証を更新する。
+                update_session_auth_hash(request, target)
+            messages.success(request, "ユーザーを更新しました。")
+            return redirect(self.success_url)
+
+        return render(request, self.template_name, {
+            "search_form": search_form,
+            "target": target,
+            "edit_form": edit_form,
+        })
