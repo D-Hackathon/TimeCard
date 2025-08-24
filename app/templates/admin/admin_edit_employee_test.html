@@ -1,0 +1,74 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block title %}社員変更・削除{% endblock %}
+{% block page_title %}社員変更・削除{% endblock %}
+{% block header_actions %}
+<a href="{% url 'attendance:mypage' %}">
+    <img src="{% static 'img/return_icon.png' %}" width="50" height="50" alt="戻る">
+</a>
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form method="get">
+    <div class="form-row">
+        <label for="{{ search_form.employee_id.id_for_label }}">社員ID</label>
+        {{ search_form.employee_id }}
+        {% if search_form.employee_id.errors %}
+        <div>{{ search_form.employee_id.errors }}</div>
+        {% endif %}
+    </div>
+    {% if search_form.non_field_errors %}
+    <div>{{ search_form.non_field_errors }}</div>
+    {% endif %}
+    <button type="submit">検索</button>
+</form>
+
+{% if target %}
+{% if edit_form.errors %}
+<div>
+    <p>入力内容に誤りがあります。確認してください。</p>
+    <ul>
+        {% for e in edit_form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
+        {% for field in edit_form %}
+        {% for e in field.errors %}
+        <li>{{ field.label }}: {{ e }}</li>
+        {% endfor %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="target" value="{{ target.pk }}">
+    <input type="hidden" name="action" value="update">
+
+    {% for field in edit_form %}
+    <div class="form-row">
+        {{ field.label_tag }}
+        {{ field }}
+    </div>
+    {% endfor %}
+
+    <button type="submit">更新</button>
+</form>
+
+<form method="post" onsubmit="return confirm('このユーザーを削除します。よろしいですか？');" >
+    {% csrf_token %}
+    <input type="hidden" name="target" value="{{ target.pk }}">
+    <input type="hidden" name="action" value="delete">
+    <button type="submit">削除</button>
+</form>
+
+{% endif %}
+{% endblock %}

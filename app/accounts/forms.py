@@ -94,24 +94,96 @@ class AddUserForm(UserCreationForm):
             user.save()
         return user
 
-class EmployeeSearchForm(forms.Form):
-    employee_id = forms.CharField(label="社員ID", required=False)
-    name = forms.CharField(label="名前", required=False)
-
-    def clean(self):
-        cleaned_data = super().clean()
-        employee_id = cleaned_data.get("employee_id")
-        name = cleaned_data.get("name")
-
-        if not employee_id and not name:
-            raise forms.ValidationError("社員IDまたは名前のいずれかを入力してください。")
-
-        return cleaned_data
+class EmployeeIdSearchForm(forms.Form):
+    employee_id = forms.CharField(label="社員ID", required=True)
 
 class EditUserForm(forms.ModelForm):
+    email_confirm = forms.EmailField(label="メールアドレス確認", required=False)
+    password = forms.CharField(
+        label="パスワード変更", required=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+    password_confirm = forms.CharField(
+        label="パスワード確認", required=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+    manager_employee_id = forms.CharField(
+        label="上司ID（社員ID）", required=False,
+        help_text=None,
+    )
+
     class Meta:
         model = User
-        fields = ("username", "employee_id", "email", "manager")
+        fields = ("employee_id", "username", "email", "email_confirm","manager_employee_id", "password", "password_confirm")
+        labels = {"username": "氏名"}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for f in self.fields.values():
+            f.help_text = None
+        if self.instance and self.instance.pk and self.instance.manager:
+            self.fields["manager_employee_id"].initial = self.instance.manager.employee_id
+        if self.instance and self.instance.pk:
+            self.fields["email_confirm"].initial = self.instance.email
+        self.order_fields([
+            "employee_id",
+            "username",
+            "email",
+            "email_confirm",
+            "manager_employee_id",
+            "password",
+            "password_confirm",
+        ])
+        self._manager_obj = None
 
     def clean_email(self):
-        return self.cleaned_data["email"].strip().lower()
+        email = self.cleaned_data.get("email")
+        return email.strip().lower() if email else email
+
+    def clean_email_confirm(self):
+        email_confirm = self.cleaned_data.get("email_confirm")
+        return email_confirm.strip().lower() if email_confirm else email_confirm
+
+    def clean(self):
+        cleaned = super().clean()
+
+        email = cleaned.get("email")
+        email_confirm = cleaned.get("email_confirm")
+        current = getattr(self.instance, "email", None)
+        if current:
+            current = current.strip().lower()
+
+        # emailが変更されたかどうか
+        email_changed = (email is not None) and (email != current)
+
+        if email_changed:
+            if not email_confirm:
+                self.add_error("email_confirm", "メールアドレス（確認）を入力してください。")
+            elif email_confirm != email:
+                self.add_error("email_confirm", "メールアドレスが一致しません。")
+        else:
+            if email_confirm and email_confirm != (email or current):
+                self.add_error("email_confirm", "メールアドレスが一致しません。")
+
+        # パスワード一致チェック
+        pw, pw2 = cleaned.get("password"), cleaned.get("password_confirm")
+        if pw or pw2:
+            if not pw or not pw2:
+                self.add_error("password_confirm", "パスワード（変更）と（確認）を両方入力してください。")
+            elif pw != pw2:
+                self.add_error("password_confirm", "パスワードが一致しません。")
+
+        # 上司社員IDからUserを検索
+        code = cleaned.get("manager_employee_id")
+        self._manager_obj = None
+        if code:
+            mgr = User.objects.filter(employee_id=code, is_active=True).first()
+            if not mgr:
+                self.add_error("manager_employee_id", "指定した上司ID（社員ID）が見つかりません。")
+            else:
+                if self.instance and self.instance.pk and mgr.pk == self.instance.pk:
+                    self.add_error("manager_employee_id", "自分自身を上司に設定することはできません。")
+                else:
+                    self._manager_obj = mgr
+
+        return cleaned
