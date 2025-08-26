@@ -1,7 +1,12 @@
 {% extends "base_admin.html" %}
 {% load static %}
+
 {% block title %}社員変更・削除{% endblock %}
 {% block page_title %}社員変更・削除{% endblock %}
+
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/admin/admin_edit_employee.css' %}">
+{% endblock %}
 {% block header_actions %}
     <a href="{% url 'attendance:mypage' %}">
         <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
@@ -9,7 +14,7 @@
 {% endblock %}
 
 {% block content %}
-    <form method="get" action="">
+    <form method="get" action="" class="form-row">
         <label>社員検索</label>
         <input type="text" name="query" placeholder="社員IDを入力してください" value="{{ request.GET.query|default:''}}"> <!--22日の打ち合わせで話していた通り、idで検索できるようにしてあります。-->
         <button type="submit">検索</button>
