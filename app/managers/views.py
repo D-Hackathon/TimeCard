@@ -150,7 +150,6 @@ class TeamWorkLogAdminView(LoginRequiredMixin,UserPassesTestMixin, View):
                 )
                 total_minutes = sum(w.minutes for w in logs)
 
-                # ▼ ここを DB 集約に変更（1日1行、最古開始/最新終了、申請前除外も対応可）
                 daily_qs = (
                     WorkLog.objects
                     .filter(user=target_user, work_date__year=year, work_date__month=month)
@@ -169,7 +168,7 @@ class TeamWorkLogAdminView(LoginRequiredMixin,UserPassesTestMixin, View):
                     # ステータス表示ルール：
                     # 1) 申請中が1件でもあれば「申請中あり」
                     # 2) 申請中が無く、何かしらのステータスが付いていれば「対応済み」
-                    # 3) どれもなければ「—」（未申請）
+                    # 3) どれもなければ「—」
                     if row["pending_count"] > 0:
                         status_label = "申請中あり"
                     elif row["with_status_count"] > 0:
