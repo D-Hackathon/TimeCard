@@ -19,3 +19,4 @@ class ProfileForm(forms.ModelForm):
             if password != password_confirm:
                 raise forms.ValidationError("パスワードが一致しません。")
         return cleaned_data
+    

@@ -1,0 +1,71 @@
+{# templates/attendance/admin_worklogs.html #}
+{% extends "base_admin.html" %}
+{% load static %}
+{% load timeformat %}
+
+{% block title %}部下の勤怠状況{% endblock %}
+{% block page_title %}部下の勤怠状況{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'attendance:mypage' %}">
+    <img src="{% static 'img/return_icon.png' %}" width="50" height="50" alt="戻る">
+</a>
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}<li class="{{ message.tags }}">{{ message }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<h2>社員検索</h2>
+<form method="get">
+    <div class="form-row">
+        <label for="{{ form.employee_id.id_for_label }}">社員IDを入力してください</label>
+        {{ form.employee_id }}
+    </div>
+    <button type="submit">検索</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>日付</th>
+            <th>勤務時間</th>
+            <th>承認</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in days %}
+        <tr>
+            <td>
+                <a href="{% url 'managers:admin_worklogs_day' target_user.employee_id d.date|date:'Y-m-d' %}">
+                    {{ d.date }}
+                </a>
+            </td>
+            <td>
+                {% if d.end %}
+                {{ d.start|date:"H:i" }}-{{ d.end|date:"H:i" }}
+                {% else %}
+                {{ d.start|date:"H:i" }}-—
+                {% endif %}
+            </td>
+            <td>{{ d.status_label }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3" style="text-align:center;">明細がありません</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>合計</th>
+            <th>{{ total_minutes|hhmm }}</th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+{% endif %}
+{% endblock %}
