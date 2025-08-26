@@ -1,5 +1,7 @@
 {% extends "base_admin.html" %}
+
 {% load static %}
+{% load timeformat %}
 {% block title %}管理者画面{% endblock %}
 {% block page_title %}管理者画面{% endblock %}
 
@@ -12,17 +14,17 @@
     <nav class="side-nav">
         <ul>
             <li><span>人事関係</span></li>
-            <li><a class="btn-nav" href="{% url 'admin:admin_employee' %}">社員新規登録</a></li>
-            <li><a class="btn-nav" href="{% url 'admin:admin_edit_employee' %}">社員変更・削除</a></li>
-            <li><a class="btn-nav btn-logout" href="{% url 'accounts:login' %}">ログアウト</a></li>
+            <li><a class="btn-nav" href="{% url 'accounts:add_user' %}">社員新規登録</a></li>
+            <li><a class="btn-nav" href="{% url 'managers:user_edit' %}">社員変更・削除</a></li>
+            <li><a class="btn-nav btn-logout" href="{% url 'accounts:logout' %}">ログアウト</a></li>
         </ul>
     </nav>
 
     <main class="main">
-
-        <form method="get" action="" class="query-form">
+        <form method="get" class="query-form">
             <label>社員検索</label>
-            <input type="text" class="input" name="query" placeholder="社員IDを入力してください" value="{{ request.GET.query|default:''}}">
+            <label for="{{ form.employee_id.id_for_label }}">社員IDを入力してください</label>
+            {{ form.employee_id }}
             <button type="submit" class="btn-query">検索</button>
         </form>
 
@@ -37,32 +39,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for record in month_records %}<!--1ヶ月分の勤務実績を引っ張ってきたいです-->
-                        <tr>
-                            <td>
-                                <a href="{% url 'admin:admin_daily_request' %}?date={{ record.work_date|date:'Y-m-d' }}"><!--選択した日付のadmin_daily_requestに遷移したい-->
-                                    {{ record.work_date|date:"m/d" }}
-                                </a>
-                            </td>
-                            <td>{{ record.total_work_minutes|default:""}}</td>
-                            <td>
-                                {% if record.note %}
-                                    ○
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-                            <td>{{ record.status_id|default:"" }}</td>
-                        </tr>
+                    {% for d in days %}
+                    <tr>
+                        <td>
+                            <a
+                                href="{% url 'managers:admin_worklogs_day' target_user.employee_id d.date|date:'Y-m-d' %}">
+                                {{ d.date }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if d.end %}
+                            {{ d.start|date:"H:i" }}-{{ d.end|date:"H:i" }}
+                            {% else %}
+                            {{ d.start|date:"H:i" }}-—
+                            {% endif %}
+                        </td>
+                        <td>{{ d.status_label }}</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
 
                 <tfoot>
                     <tr>
                         <th>合計</th>
-                        <td>{{ month_total_work_time|default:"" }}</td><!--ここのトータルは月の合計を表示させたいです-->
-                        <td></td>
-                        <td></td>
+                        <th>{{ total_minutes|hhmm }}</th>
+                        <th></th>
                     </tr>
                 </tfoot>
             </table>

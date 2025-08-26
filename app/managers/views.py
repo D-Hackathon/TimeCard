@@ -105,7 +105,7 @@ class UserEditView(LoginRequiredMixin, UserPassesTestMixin, View):
         })
 
 class TeamWorkLogAdminView(LoginRequiredMixin,UserPassesTestMixin, View):
-    template_name = r"admin/admin_setting_test.html"
+    template_name = r"admin/admin_setting.html"
 
     def test_func(self):
         u = self.request.user
