@@ -93,10 +93,7 @@ class AddUserForm(UserCreationForm):
         if commit:
             user.save()
         return user
-
-class EmployeeIdSearchForm(forms.Form):
-    employee_id = forms.CharField(label="社員ID", required=True)
-
+    
 class EditUserForm(forms.ModelForm):
     email_confirm = forms.EmailField(label="メールアドレス確認", required=False)
     password = forms.CharField(

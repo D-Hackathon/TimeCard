@@ -10,7 +10,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.utils.dateparse import parse_date
 from django.http import Http404
 
-from accounts.forms import EmployeeIdSearchForm, EditUserForm
+from accounts.forms import EditUserForm
 from accounts.models import User
 from .forms import EmployeeIDSearchForm
 from attendances.models import WorkLog, ApprovalStatus, WorkLogStatusHistory
@@ -37,7 +37,7 @@ class UserEditView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     # 社員IDで検索して、編集フォームを表示する。
     def get(self, request, *args, **kwargs):
-        search_form = EmployeeIdSearchForm(request.GET or None)
+        search_form = EmployeeIDSearchForm(request.GET or None)
         target = None
         edit_form = None
 
@@ -88,7 +88,7 @@ class UserEditView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         # 更新の場合
         edit_form = EditUserForm(request.POST, instance=target)
-        search_form = EmployeeIdSearchForm(initial={"employee_id": target.employee_id})
+        search_form = EmployeeIDSearchForm(initial={"employee_id": target.employee_id})
 
         if edit_form.is_valid():
             password_changed = bool(edit_form.cleaned_data.get("password"))
@@ -123,7 +123,7 @@ class TeamWorkLogAdminView(LoginRequiredMixin,UserPassesTestMixin, View):
         return User.objects.filter(is_active=True, manager=u)
 
     def get(self, request):
-        form = EmployeeIdSearchForm(request.GET or None)
+        form = EmployeeIDSearchForm(request.GET or None)
         target_user, logs = None, []
         year = month = None
         total_minutes = 0
