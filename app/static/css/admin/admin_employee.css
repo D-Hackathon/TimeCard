@@ -1,0 +1,52 @@
+form {
+    max-width:760px;
+    margin: 0 auto;
+    padding:24px 12px 40px;
+}
+
+.form-row {
+    display: block;
+    margin: 0 0 22px;
+}
+
+.form-row > label {
+    display: grid;
+    grid-template-columns: 160px 520px;
+    align-items: center;
+    gap: 24px;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+    color: #000
+}
+
+.form-row input[type="text"],
+.form-row input[type="email"],
+.form-row input[type="password"]{
+    width: 100%;
+    height: 44px;
+    padding: 8px 12px;
+    border: 2px solid #000;
+    background: #fff;
+    font-size: 16px;
+    line-height: 1;
+    outline: none;
+}
+
+#registration {
+    margin-top: 8px;
+    text-align: center;
+}
+
+#registration button[type="submit"] {
+    min-width: 120px;
+    height: 44px;
+    padding: 0 18px;
+    border: none;
+    background: #236CFF;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+}
+

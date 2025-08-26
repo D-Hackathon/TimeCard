@@ -12,16 +12,11 @@
     padding: 0;
 }
 
-.side-nav li {
-    margin-bottom: 12px;
-}
-
 .side-nav span {
     display: block;
     padding: 14px 16px;
     background: #236CFF;
     color: #fff;
-    border-radius: 6px;
     font-weight: 700;
     text-align: center;
 }
