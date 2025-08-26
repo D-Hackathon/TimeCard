@@ -1,14 +1,21 @@
+{# templates/attendance/admin_worklogs.html #}
 {% extends "base_admin.html" %}
+{% load static %}
 {% load timeformat %}
-{% block title %}管理者画面{% endblock %}
-{% block page_title %}管理者画面{% endblock %}
+
+{% block title %}部下の勤怠状況{% endblock %}
+{% block page_title %}部下の勤怠状況{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'attendance:mypage' %}">
+    <img src="{% static 'img/return_icon.png' %}" width="50" height="50" alt="戻る">
+</a>
+{% endblock %}
 
 {% block content %}
 {% if messages %}
 <ul class="messages">
-    {% for message in messages %}
-    <li class="{{ message.tags }}">{{ message }}</li>
-    {% endfor %}
+    {% for message in messages %}<li class="{{ message.tags }}">{{ message }}</li>{% endfor %}
 </ul>
 {% endif %}
 
@@ -22,6 +29,8 @@
 </form>
 
 {% if target_user and year and month %}
+<hr>
+<h3>{{ target_user.username }}（{{ target_user.employee_id }}）の {{ year }}年{{ month }}月 勤怠</h3>
 
 <table class="table table-striped">
     <thead>
@@ -32,17 +41,21 @@
         </tr>
     </thead>
     <tbody>
-        {% for w in logs %}
+        {% for d in days %}
         <tr>
-            <td>{{ w.work_date }}</td>
             <td>
-                {% if w.end_time %}
-                {{ w.start_time|date:"H:i" }}-{{ w.end_time|date:"H:i" }}
+                <a href="{% url 'managers:admin_worklogs_day' target_user.employee_id d.date|date:'Y-m-d' %}">
+                    {{ d.date }}
+                </a>
+            </td>
+            <td>
+                {% if d.end %}
+                {{ d.start|date:"H:i" }}-{{ d.end|date:"H:i" }}
                 {% else %}
-                {{ w.start_time|date:"H:i" }}-—
+                {{ d.start|date:"H:i" }}-—
                 {% endif %}
             </td>
-            <td>{{ w.status.name|default:"—" }}</td>
+            <td>{{ d.status_label }}</td>
         </tr>
         {% empty %}
         <tr>
