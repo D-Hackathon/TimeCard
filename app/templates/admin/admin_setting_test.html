@@ -28,10 +28,6 @@
     <button type="submit">検索</button>
 </form>
 
-{% if target_user and year and month %}
-<hr>
-<h3>{{ target_user.username }}（{{ target_user.employee_id }}）の {{ year }}年{{ month }}月 勤怠</h3>
-
 <table class="table table-striped">
     <thead>
         <tr>
