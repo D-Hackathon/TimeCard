@@ -1,62 +1,72 @@
 {% extends "base_admin.html" %}
-{% load timeformat %}
+{% load static %}
 {% block title %}管理者画面{% endblock %}
 {% block page_title %}管理者画面{% endblock %}
 
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/admin/admin_setting.css' %}">
+{% endblock %}
+
 {% block content %}
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li class="{{ message.tags }}">{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+<div class="admin-layout">
+    <nav class="side-nav">
+        <ul>
+            <li><span>人事関係</span></li>
+            <li><a class="btn-nav" href="{% url 'admin:admin_employee' %}">社員新規登録</a></li>
+            <li><a class="btn-nav" href="{% url 'admin:admin_edit_employee' %}">社員変更・削除</a></li>
+            <li><a class="btn-nav btn-logout" href="{% url 'accounts:login' %}">ログアウト</a></li>
+        </ul>
+    </nav>
 
-<h2>社員検索</h2>
-<form method="get">
-    <div class="form-row">
-        <label for="{{ form.employee_id.id_for_label }}">社員ID</label>
-        {{ form.employee_id }}
-    </div>
-    <button type="submit">検索</button>
-</form>
+    <main class="main">
 
-{% if target_user and year and month %}
+        <form method="get" action="" class="query-form">
+            <label>社員検索</label>
+            <input type="text" class="input" name="query" placeholder="社員IDを入力してください" value="{{ request.GET.query|default:''}}">
+            <button type="submit" class="btn-query">検索</button>
+        </form>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>日付</th>
-            <th>勤務時間</th>
-            <th>承認</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for w in logs %}
-        <tr>
-            <td>{{ w.work_date }}</td>
-            <td>
-                {% if w.end_time %}
-                {{ w.start_time|date:"H:i" }}-{{ w.end_time|date:"H:i" }}
-                {% else %}
-                {{ w.start_time|date:"H:i" }}-—
-                {% endif %}
-            </td>
-            <td>{{ w.status.name|default:"—" }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="3" style="text-align:center;">明細がありません</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-    <tfoot>
-        <tr>
-            <th>合計</th>
-            <th>{{ total_minutes|hhmm }}</th>
-            <th></th>
-        </tr>
-    </tfoot>
-</table>
-{% endif %}
+        <section class="month-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>日付</th>
+                        <th>勤務時間</th>
+                        <th>備考</th>
+                        <th>ステータス</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in month_records %}<!--1ヶ月分の勤務実績を引っ張ってきたいです-->
+                        <tr>
+                            <td>
+                                <a href="{% url 'admin:admin_daily_request' %}?date={{ record.work_date|date:'Y-m-d' }}"><!--選択した日付のadmin_daily_requestに遷移したい-->
+                                    {{ record.work_date|date:"m/d" }}
+                                </a>
+                            </td>
+                            <td>{{ record.total_work_minutes|default:""}}</td>
+                            <td>
+                                {% if record.note %}
+                                    ○
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>{{ record.status_id|default:"" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th>合計</th>
+                        <td>{{ month_total_work_time|default:"" }}</td><!--ここのトータルは月の合計を表示させたいです-->
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+    </main>
+</div>
 {% endblock %}
