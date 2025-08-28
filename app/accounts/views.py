@@ -55,7 +55,7 @@ class LogoutView(View):
     
 
 class AdduserView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    template_name = "admin/admin_employee_test.html"
+    template_name = "admin/admin_employee.html"
     form_class = AddUserForm
     success_url = reverse_lazy("accounts:add_user")
 

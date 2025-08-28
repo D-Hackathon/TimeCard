@@ -3,6 +3,9 @@
 
 {% block title %}社員変更・削除{% endblock %}
 {% block page_title %}社員変更・削除{% endblock %}
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/admin/admin_edit_employee.css' %}">
+{% endblock %}
 {% block header_actions %}
 <a href="{% url 'attendance:mypage' %}">
     <img src="{% static 'img/return_icon.png' %}" width="50" height="50" alt="戻る">
@@ -19,9 +22,8 @@
 </ul>
 {% endif %}
 
-<form method="get">
-    <div class="form-row">
-        <label for="{{ search_form.employee_id.id_for_label }}">社員ID</label>
+<form method="get" class="form-row">
+        <label>社員検索</label>
         {{ search_form.employee_id }}
         {% if search_form.employee_id.errors %}
         <div>{{ search_form.employee_id.errors }}</div>
@@ -60,14 +62,11 @@
     </div>
     {% endfor %}
 
-    <button type="submit">更新</button>
-</form>
-
-<form method="post" onsubmit="return confirm('このユーザーを削除します。よろしいですか？');" >
-    {% csrf_token %}
-    <input type="hidden" name="target" value="{{ target.pk }}">
-    <input type="hidden" name="action" value="delete">
-    <button type="submit">削除</button>
+    <p>
+        <button id="update" type="submit" name="action" value="update">変更</button>
+        <button id="delete" type="submit" name="action" value="delete"
+            onclick="return confirm('本当に削除しますか？');">社員削除</button>
+    </p>
 </form>
 
 {% endif %}

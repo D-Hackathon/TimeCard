@@ -42,14 +42,14 @@ class AddUserForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        # ラベル名の調整
+        # ラベル調整
         self.fields["password1"].label = "初期パスワード"
-        self.fields["password2"].label = "初期パスワード確認"
+        self.fields["password2"].label = "初期パスワード 確認"
 
+        # 表示順（テンプレの順番に固定）
         field_order = [
-            "username",
             "employee_id",
+            "username",
             "email",
             "email_confirm",
             "manager_employee_id",
@@ -57,6 +57,19 @@ class AddUserForm(UserCreationForm):
             "password2",
         ]
         self.order_fields(field_order)
+
+        # プレースホルダ（任意）
+        for name, ph in [
+            ("employee_id", "入力してください"),
+            ("username", "入力してください"),
+            ("email", "入力してください"),
+            ("email_confirm", "入力してください"),
+            ("manager_employee_id", "入力してください"),
+            ("password1", "入力してください"),
+            ("password2", "入力してください"),
+        ]:
+            self.fields[name].widget.attrs.update({"placeholder": ph})
+
 
     def clean_email(self):
         return self.cleaned_data["email"].strip().lower()
@@ -95,7 +108,10 @@ class AddUserForm(UserCreationForm):
         return user
     
 class EditUserForm(forms.ModelForm):
-    email_confirm = forms.EmailField(label="メールアドレス確認", required=False)
+    email_confirm = forms.EmailField(
+        label="メールアドレス確認", required=False,
+        widget=forms.EmailInput()
+    )
     password = forms.CharField(
         label="パスワード変更", required=False,
         widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
@@ -107,21 +123,68 @@ class EditUserForm(forms.ModelForm):
     manager_employee_id = forms.CharField(
         label="上司ID（社員ID）", required=False,
         help_text=None,
+        widget=forms.TextInput()
     )
 
     class Meta:
         model = User
-        fields = ("employee_id", "username", "email", "email_confirm","manager_employee_id", "password", "password_confirm")
+        fields = (
+            "employee_id",
+            "username",
+            "email",
+            "email_confirm",
+            "manager_employee_id",
+            "password",
+            "password_confirm",
+        )
         labels = {"username": "氏名"}
+        widgets = {
+            "employee_id": forms.TextInput(),
+            "username": forms.TextInput(),
+            "email": forms.EmailInput(),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for f in self.fields.values():
             f.help_text = None
+            
+        self.fields["employee_id"].widget.attrs.update({
+            "placeholder": "入力してください",
+            "class": "form-control",
+        })
+        self.fields["username"].widget.attrs.update({
+            "placeholder": "入力してください",
+            "class": "form-control",
+        })
+        self.fields["email"].widget.attrs.update({
+            "placeholder": "入力してください",
+            "class": "form-control",
+        })
+        self.fields["email_confirm"].widget.attrs.update({
+            "placeholder": "入力してください",
+            "class": "form-control",
+        })
+        self.fields["manager_employee_id"].widget.attrs.update({
+            "placeholder": "入力してください",
+            "class": "form-control",
+        })
+        self.fields["password"].widget.attrs.update({
+            "placeholder": "入力してください",
+            "class": "form-control",
+        })
+        self.fields["password_confirm"].widget.attrs.update({
+            "placeholder": "入力してください",
+            "class": "form-control",
+        })
+
+        # 既存データを初期値に設定
         if self.instance and self.instance.pk and self.instance.manager:
             self.fields["manager_employee_id"].initial = self.instance.manager.employee_id
         if self.instance and self.instance.pk:
             self.fields["email_confirm"].initial = self.instance.email
+
+        # 順序を固定
         self.order_fields([
             "employee_id",
             "username",

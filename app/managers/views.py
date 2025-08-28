@@ -21,7 +21,7 @@ def is_manager(user):
     return User.objects.filter(manager=user).exists()
 
 class UserEditView(LoginRequiredMixin, UserPassesTestMixin, View):
-    template_name = r"admin/admin_edit_employee_test.html"
+    template_name = r"admin/admin_edit_employee.html"
     success_url = reverse_lazy("managers:user_edit")
 
     def test_func(self):
@@ -80,7 +80,7 @@ class UserEditView(LoginRequiredMixin, UserPassesTestMixin, View):
                 with transaction.atomic():
                     target.is_active = False
                     target.save(update_fields=["is_active"])
-                messages.success(request, f"ユーザー「{target.username}」を削除しました。")
+                messages.success(request, f"「{target.username}」を削除しました。")
                 return redirect(self.success_url)
             except Exception as e:
                 messages.error(request, f"削除に失敗しました：{e}")

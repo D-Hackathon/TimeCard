@@ -3,65 +3,71 @@
 
 {% block title %}社員変更・削除{% endblock %}
 {% block page_title %}社員変更・削除{% endblock %}
-
 {% block page_css %}
 <link rel="stylesheet" href="{% static 'css/admin/admin_edit_employee.css' %}">
 {% endblock %}
 {% block header_actions %}
-    <a href="{% url 'attendance:mypage' %}">
-        <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
-    </a>
+<a href="{% url 'attendance:mypage' %}">
+    <img src="{% static 'img/return_icon.png' %}" width="50" height="50" alt="戻る">
+</a>
 {% endblock %}
 
 {% block content %}
-    <form method="get" action="" class="form-row">
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form method="get" class="form-row">
         <label>社員検索</label>
-        <input type="text" name="query" placeholder="社員IDを入力してください" value="{{ request.GET.query|default:''}}"> <!--22日の打ち合わせで話していた通り、idで検索できるようにしてあります。-->
-        <button type="submit">検索</button>
-    </form>
+        {{ search_form.employee_id }}
+        {% if search_form.employee_id.errors %}
+        <div>{{ search_form.employee_id.errors }}</div>
+        {% endif %}
+    </div>
+    {% if search_form.non_field_errors %}
+    <div>{{ search_form.non_field_errors }}</div>
+    {% endif %}
+    <button type="submit">検索</button>
+</form>
 
-    <form method="post" action="">
-        {% csrf_token %}
+{% if target %}
+{% if edit_form.errors %}
+<div>
+    <p>入力内容に誤りがあります。確認してください。</p>
+    <ul>
+        {% for e in edit_form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
+        {% for field in edit_form %}
+        {% for e in field.errors %}
+        <li>{{ field.label }}: {{ e }}</li>
+        {% endfor %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
 
-        <div class="form-row">
-            <label>社員ID</label>
-            <input name="employee_code" type="text" placeholder="入力してください" value="{% if employee %}{{ employee.employee_code }}{% endif %}"> <!--value=の処理で検索結果を受け取ろうと思っています。以下の処理も同様です。-->
-        </div>
+<form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="target" value="{{ target.pk }}">
+    <input type="hidden" name="action" value="update">
 
-        <div class="form-row">
-            <label>名前</label>
-            <input name="name" type="text" placeholder="入力してください" value="{% if employee %}{{ employee.name }}{% endif %}">
-        </div>
+    {% for field in edit_form %}
+    <div class="form-row">
+        {{ field.label_tag }}
+        {{ field }}
+    </div>
+    {% endfor %}
 
-        <div class="form-row">
-            <label>メールアドレス</label>
-            <input name="email" type="email" placeholder="入力してください" value="{% if employee %}{{ employee.email }}{% endif %}">
-        </div>
+    <p>
+        <button id="update" type="submit" name="action" value="update">変更</button>
+        <button id="delete" type="submit" name="action" value="delete"
+            onclick="return confirm('本当に削除しますか？');">社員削除</button>
+    </p>
+</form>
 
-        <div class="form-row">
-            <label>メールアドレス変更</label>
-            <input name="email_new" type="email" placeholder="入力してください">
-        </div>
-
-        <div class="form-row">
-            <label>上司ID</label>
-            <input name="manager_id" type="text" placeholder="入力してください" value="{% if employee %}{{ employee.manager_id }}{% endif %}">
-        </div>
-
-        <div class="form-row">
-            <label>パスワード変更</label>
-            <input name="password" type="password" placeholder="入力してください">
-        </div>
-
-        <div class="form-row">
-            <label>パスワード確認</label>
-            <input name="password_confirm" type="password" placeholder="入力してください">
-        </div>
-
-        <p>
-            <button id="update" type="submit" name="action" value="update">変更</button>
-            <button id="delete" type="submit" name="action" value="delete" onclick="return confirm('本当に削除しますか？');">社員削除</button>
-        </p>
-    </form>
+{% endif %}
 {% endblock %}
-
