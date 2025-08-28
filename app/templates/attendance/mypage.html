@@ -21,14 +21,14 @@
         </form>
     </section>
 
-    <section>
+    <div>
         <!--カレンダ-->
-    </section>
+    </div>
 
     <p>今月の勤務実績<!--ここに関数--></p>
 
     <form method="post" action="{% url <!--確認--> %}">
         {% csrf_token %}
-        <button type="submit">ログアウト</button>
+        <button id="logout" type="submit">ログアウト</button>
     </form>
 {% endblock %}
