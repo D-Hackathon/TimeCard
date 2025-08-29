@@ -14,17 +14,17 @@ form {
     box-sizing: border-box;
 }
 
-form div {
+div {
     display: grid;
     row-gap: 10px;
 }
 
-form label {
+label {
     font-size: 20px;
     font-weight: 700;
 }
 
-form p {
+p {
     height: 48px;
     border: 2px solid #000;
     background: #fff;
@@ -36,8 +36,7 @@ form p {
     box-sizing: border-box;
 }
 
-form input[type="email"],
-form input[type="password"] {
+input {
     height: 48px;
     border: 2px solid #000;
     background: #fff;
@@ -47,11 +46,11 @@ form input[type="password"] {
     width: 100%;
 }
 
-form input::placeholder {
+input::placeholder {
     color: #ccc;
 }
 
-form button[type="submit"] {
+button {
     justify-self: center;
     min-width: 160px;
     height: 56px;
