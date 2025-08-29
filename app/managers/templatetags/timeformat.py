@@ -10,5 +10,5 @@ def hhmm(total_minutes):
         return "00:00"
     sign = "-" if m < 0 else ""
     m = abs(m)
-    h, mm = divmod(m, 60)
+    h, mm = divmod(m, 60) # 60で割った商と余りを取得
     return f"{sign}{h:02d}:{mm:02d}"

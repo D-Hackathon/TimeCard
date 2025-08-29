@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'accounts', 
     'attendances',
     'managers',
+    'axes'
 ]
 
 MIDDLEWARE = [
@@ -47,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'axes.middleware.AxesMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -129,9 +132,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesBackend",
     "accounts.backends.EmailBackend",           
     "django.contrib.auth.backends.ModelBackend",
 ]
 
 LOGIN_URL = "accounts:login"
 LOGOUT_REDIRECT_URL = "accounts:login" 
+
+
+### django-axes settings
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = timedelta(hours=1)
+
+
+AXES_LOCK_OUT_AT_FAILURE = True
+AXES_ONLY_USER_FAILURES = True
+AXES_RESET_ON_SUCCESS = True
+
+AXES_CACHE = 'default'
+
+AXES_META_PRECEDENCE_ORDER = (
+    'HTTP_X_FORWARDED_FOR', 
+    'REMOTE_ADDR',
+)
