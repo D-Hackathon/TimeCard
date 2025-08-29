@@ -1,29 +1,35 @@
-version: '3.8'
+version: "3.9"
 
 services:
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
+  app:
+    build: ./app
+    command: uwsgi --ini /app/uwsgi.ini
+    env_file:
+      - ./app/.env.prod
     volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    environment:
-      - DB_NAME=django_db
-      - DB_USER=root
-      - DB_PASSWORD=password
-      - DB_HOST=db
+      - static:/static
+      - media:/media
+    expose:
+      - "3031"           # uWSGI (uwsgi protocol) を TCP 3031 で待ち受け
+    restart: unless-stopped
 
-  db:
-    image: mysql:8.0
-    restart: always
-    environment:
-      MYSQL_DATABASE: django_db
-      MYSQL_ROOT_PASSWORD: password
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"          # ALB→EC2 のターゲットは 80
     volumes:
-      - mysql_data:/var/lib/mysql
+      - static:/static:ro
+      - media:/media:ro
+    depends_on:
+      - app
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/healthz | grep -q ok || exit 1"]
+      interval: 10s
+      timeout: 2s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
 
 volumes:
-  mysql_data:
+  static:
+  media:
