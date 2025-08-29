@@ -31,8 +31,6 @@
     text-align: center;
 }
 
-.btn-nav:hover { opacity: 0.9; }
-
 .btn-logout {
     background: #FF4C7C;
 }
@@ -45,7 +43,7 @@
     margin:16px 0 28px;
 }
 
-.query-form > label {
+.query-form label {
     display: block;
     font-size: 32px;
     margin-bottom:12px;
@@ -69,12 +67,10 @@
     border: 2px solid #000;
     background: #fff;
     font-size: 32px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     vertical-align: middle;
 }
-
-.btn-query:hover { opacity: 0.9; }
 
 .month-table {
     margin-top: 8px;
@@ -107,5 +103,3 @@
     color: inherit;
     text-decoration: none;
 }
-
-.month-table a:hover { text-decoration: underline; }

@@ -9,13 +9,12 @@ form {
     margin: 0 0 22px;
 }
 
-.form-row > label {
+.form-row label {
     display: grid;
     grid-template-columns: 160px 520px;
     align-items: center;
     gap: 24px;
     font-size: 18px;
-    letter-spacing: 0.02em;
     color: #000
 }
 
@@ -45,8 +44,7 @@ form {
     background: #236CFF;
     color: #fff;
     font-size: 18px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
+    font-weight: 700;
     cursor: pointer;
 }
 

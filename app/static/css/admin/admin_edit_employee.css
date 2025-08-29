@@ -13,7 +13,7 @@
         margin-bottom: 22px;
     }
 
-    form[method="get"] > label {
+    form[method="get"] label {
         font-size: 18px;
     }
 
@@ -48,7 +48,7 @@
         margin: 0 0 40px;
     }
 
-    .form-row > label {
+    .form-row label {
         grid-column: 1;
         font-size: 18px;
         color: #000;
@@ -68,7 +68,7 @@
         box-sizing: border-box;
     }
 
-    form[method="post"] > p {
+    form[method="post"] p {
         display : grid;
         grid-template-columns: 1fr 1fr 1fr;
         align-items: center;
@@ -81,9 +81,8 @@
         height: 44px;
         padding: 0 18px;
         font-size: 18px;
-        font-weight: 800;
+        font-weight: 700;
         border: none;
-        letter-spacing: 0.08em;
         cursor: pointer;
     }
 
@@ -97,6 +96,6 @@
     #delete {
         grid-column: 3;
         justify-self: end;
-        background: #FF0000;
+        background: #FF4C7C;
         color: #fff;
     }
