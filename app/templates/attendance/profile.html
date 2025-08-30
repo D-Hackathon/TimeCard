@@ -13,17 +13,12 @@
         {% csrf_token %}
         <div>
             <label>メールアドレス(現在)</label>
-            <p>{{ <!--確認--> }}</p>
+            <p>{{ request.user.email }}</p>
         </div>
 
         <div>
             <label>メールアドレス(変更)</label>
             <input id="email_new" type="email" name="<!--確認-->">
-        </div>
-
-        <div>
-            <label>パスワード 現在</label>
-            <p>{{ <!--確認--> }}</p>
         </div>
 
         <div>

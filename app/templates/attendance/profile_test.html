@@ -1,12 +1,9 @@
-<!--https://gray-code.com/html_css/setting-cant-enterd-text-to-input-element/-->
-
 {% extends "base_attendance.html" %}
 {% load static %}
-
 {% block title %}個人情報{% endblock %}
 {% block page_title %}個人情報{% endblock %}
 {% block header_actions %}
-    <a href="{% url "attendance:mypage" %}">
+    <a href="{% url attendance:profile %}">
         <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
     </a>
 {% endblock %}
