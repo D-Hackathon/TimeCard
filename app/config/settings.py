@@ -148,7 +148,7 @@ AXES_COOLOFF_TIME = timedelta(hours=1)
 
 
 AXES_LOCK_OUT_AT_FAILURE = True
-AXES_LOCKOUT_PARAMETERS = ["username"]
+AXES_LOCKOUT_PARAMETERS = ["username", "ip_address"]
 AXES_RESET_ON_SUCCESS = True
 AXES_CACHE = 'default'
 
