@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView
 from django.views import View
+from django.views.generic import TemplateView
 
 from .forms import ProfileForm
 
@@ -31,3 +32,9 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
             update_session_auth_hash(self.request, user)
         messages.success(self.request, "プロフィールを更新しました。")
         return response
+    
+class MyPageView(LoginRequiredMixin, TemplateView):
+    template_name = "attendance/mypage_dummy.html"
+
+class DailyRequestView(LoginRequiredMixin, TemplateView):
+    template_name = "attendance/daily_request_dummy.html"
