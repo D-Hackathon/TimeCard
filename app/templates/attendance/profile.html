@@ -4,7 +4,7 @@
 {% block page_title %}個人情報{% endblock %}
 
 {% block page_css %}
-    <link rel="stylesheet" href="{% static 'css/attendance/profile.css' %}">
+<link rel="stylesheet" href="{% static 'css/attendance/profile.css' %}">
 {% endblock %}
 
 {% block header_actions %}
@@ -18,17 +18,12 @@
         {% csrf_token %}
         <div>
             <label>メールアドレス(現在)</label>
-            <p>{{ <!--確認--> }}</p>
+            <p>{{ request.user.email }}</p>
         </div>
 
         <div>
             <label>メールアドレス(変更)</label>
             <input type="email" name="<!--確認-->">
-        </div>
-
-        <div>
-            <label>パスワード 現在</label>
-            <p>{{ <!--確認--> }}</p>
         </div>
 
         <div>

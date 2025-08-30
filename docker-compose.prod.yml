@@ -2,28 +2,31 @@ version: "3.9"
 
 services:
   app:
-    build: ./app
-    command: uwsgi --ini /app/uwsgi.ini
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uwsgi --chdir /code/app --ini /code/uwsgi.ini
+    working_dir: /code
     env_file:
-      - ./app/.env.prod
+      - .env.prod
     volumes:
       - static:/static
       - media:/media
     expose:
-      - "3031"           # uWSGI (uwsgi protocol) を TCP 3031 で待ち受け
+      - "3031"
     restart: unless-stopped
 
   nginx:
     build: ./nginx
     ports:
-      - "80:80"          # ALB→EC2 のターゲットは 80
+      - "80:80"
+    depends_on:
+      - app
     volumes:
       - static:/static:ro
       - media:/media:ro
-    depends_on:
-      - app
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/healthz | grep -q ok || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ || exit 1"]
       interval: 10s
       timeout: 2s
       retries: 3

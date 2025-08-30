@@ -16,8 +16,8 @@ class LoginView(FormView):
     template_name = "accounts/login_test.html"
     form_class = LoginForm
     #　ログイン後の画面は２種類あるので、分岐させる。
-    success_url = reverse_lazy("accounts:user_list") # 後ほど変更
-    admin_url = reverse_lazy("accounts:add_user") #後ほど変更
+    success_url = reverse_lazy("attendance:mypage")
+    admin_url = reverse_lazy("managers:admin_worklogs") #後ほど変更
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -49,6 +49,9 @@ class LoginView(FormView):
         return super().dispatch(request, *args, **kwargs)
     
 class LogoutView(View):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect("accounts:login")
     def post(self, request, *args, **kwargs):
         logout(request)
         return redirect("accounts:login")

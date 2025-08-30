@@ -10,14 +10,21 @@
 
 {% block header_actions %}
 <div id="return">
-    <a href="{% url 'attendance:mypage' %}">
-        <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
-    </a>
+<a href="{% url 'managers:admin_worklogs' %}">
+    <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
+</a>
 </div>
 {% endblock %}
 
 
 {% block content %}
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="message {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
 <form method="post">
     {% csrf_token %}
 

@@ -1,0 +1,57 @@
+{% extends "base_attendance.html" %}
+{% load static %}
+{% block title %}日次申請{% endblock %}
+
+{% block page_title %}2025/08/30 (土){% endblock %}
+{% block page_css %}
+<link rel="stylesheet" href="{% static 'css/attendance/daily_request.css' %}">
+{% endblock %}
+
+{% block header_actions %}
+    <a href="{% url 'attendance:mypage' %}">
+        <img src="{% static 'img/return_icon.png' %}" width="50" height="50" alt="戻る">
+    </a>
+{% endblock %}
+
+{% block content %}
+<p id="daily">2025/08/30 (土)の勤務実績</p>
+
+<form method="post" action="#">
+    {% csrf_token %}
+
+    <input type="hidden" name="date" value="2025-08-30">
+
+    <section>
+        <div>
+            <label class="record">勤務実績1</label>
+            <input name="work1_start" type="time" value="09:00">
+            <span>〜</span>
+            <input name="work1_end" type="time" value="10:25">
+            申請待ち
+        </div>
+    </section>
+
+    <section>
+        <div>
+            <label class="record">勤務実績2</label>
+            <input name="work2_start" type="time" value="10:25">
+            <span>〜</span>
+            <input name="work2_end" type="time" value="12:00">
+            申請待ち
+        </div>
+    </section>
+
+    <section>
+        <div>
+            <label class="record">勤務実績3</label>
+            <input name="work3_start" type="time" value="13:00">
+            <span>〜</span>
+            <input name="work3_end" type="time" value="15:35">
+            申請待ち
+        </div>
+    </section>
+
+    <p><button type="submit" disabled>登録</button></p>
+</form>
+
+{% endblock %}

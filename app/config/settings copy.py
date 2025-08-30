@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-)2=i7rd^t@9zt=x1cjcsxyhj6mrl7%-a3^&&0e^!48yvd2r$ci
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -124,7 +124,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [              
     BASE_DIR / "static",
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -143,13 +142,15 @@ LOGOUT_REDIRECT_URL = "accounts:login"
 
 
 ### django-axes settings
+# https://qiita.com/shun198/items/a6880feb82b7adaf68e5
+
 AXES_FAILURE_LIMIT = 3
 AXES_COOLOFF_TIME = timedelta(hours=1)
-
 
 AXES_LOCK_OUT_AT_FAILURE = True
 AXES_LOCKOUT_PARAMETERS = ["username"]
 AXES_RESET_ON_SUCCESS = True
+
 AXES_CACHE = 'default'
 
 AXES_IPWARE_META_PRECEDENCE_ORDER = (
