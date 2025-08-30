@@ -1,20 +1,30 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
 <h1>ログイン</h1>
-{% if form.non_field_errors %}
-  {% for error in form.non_field_errors %}
-    <div class="error">{{ error }}</div>
-  {% endfor %}
-{% endif %}
-<form method="post">
+
+{% block page_css %}
+  <link rel="stylesheet" href="{% static 'css/accounts/login.css' %}">
+{% endblock %}
+
+<form method="post" action="">
   {% csrf_token %}
+
   <label for="id_email">メールアドレス</label><br>
   <input type="email" name="email" id="id_email" required><br><br>
 
   <label for="id_password">パスワード</label><br>
   <input type="password" name="password" id="id_password" required><br><br>
-  <button type="submit" name="action" value="user">ログイン</button>
-  <button type="submit" name="action" value="admin">管理者画面へ</button>
+
+{% if form.non_field_errors %}
+  {% for error in form.non_field_errors %}
+    <div class="error">{{ error }}</div>
+  {% endfor %}
+{% endif %}
+
+  <button id="login" type="submit" name="action" value="user">ログイン</button>
+
+  <button id="admin" type="submit" name="action" value="admin">管理者画面へ</button>
+
 </form>
 {% endblock %}

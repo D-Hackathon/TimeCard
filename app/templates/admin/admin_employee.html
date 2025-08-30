@@ -5,12 +5,15 @@
 {% block page_title %}新規社員登録{% endblock %}
 
 {% block page_css %}
-<link rel="stylesheet" href="{% static 'css/admin/admin_employee.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/admin_employee.css' %}">
 {% endblock %}
+
 {% block header_actions %}
-<a href="{% url 'attendance:mypage' %}">
-    <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
-</a>
+<div id="return">
+    <a href="{% url 'attendance:mypage' %}">
+        <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
+    </a>
+</div>
 {% endblock %}
 
 
