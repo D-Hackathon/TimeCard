@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uwsgi --chdir /code/app --ini /code/app/uwsgi.ini
+    working_dir: /code
+    env_file:
+      - .env.prod
+    volumes:
+      - static:/static
+      - media:/media
+    expose:
+      - "3031"
+    restart: unless-stopped
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    volumes:
+      - static:/static:ro
+      - media:/media:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/ || exit 1"]
+      interval: 10s
+      timeout: 2s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  static:
+  media:
