@@ -1,16 +1,19 @@
 {% extends "base_attendance.html" %}
 {% load static %}
+
 {% block title %}個人情報{% endblock %}
 {% block page_title %}個人情報{% endblock %}
 
 {% block page_css %}
-<link rel="stylesheet" href="{% static 'css/attendance/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/attendance/profile.css' %}">
 {% endblock %}
 
 {% block header_actions %}
-    <a href="{% url attendance:mypage %}">
+<div id="return">
+    <a href="{% url 'attendance:mypage' %}">
         <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
     </a>
+</div>
 {% endblock %}
 
 {% block content %}

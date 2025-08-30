@@ -37,3 +37,18 @@ p {
     font-size: 24px;
     font-weight: 800;
 }
+
+#icon {
+    position: absolute;
+    right: 80px;
+    top: 35px;
+}
+
+#page-title {
+position: absolute;
+left: 45%;
+top: 35px;
+font-size: 28px;
+font-weight: 700;
+text-align: center;
+}

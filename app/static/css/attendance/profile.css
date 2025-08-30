@@ -63,3 +63,18 @@ button {
     cursor: pointer;
     margin-top: 20px;
 }
+
+#page-title {
+    position: absolute;
+    left: 45%;
+    top: 35px;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+}
+
+#return {
+    position: absolute;
+    right: 80px;
+    top: 35px;
+}
