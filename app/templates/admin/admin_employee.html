@@ -8,13 +8,20 @@
 <link rel="stylesheet" href="{% static 'css/admin/admin_employee.css' %}">
 {% endblock %}
 {% block header_actions %}
-<a href="{% url 'attendance:mypage' %}">
+<a href="{% url 'managers:admin_worklogs' %}">
     <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
 </a>
 {% endblock %}
 
 
 {% block content %}
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="message {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
 <form method="post">
     {% csrf_token %}
 
