@@ -1,25 +1,21 @@
-# app/Dockerfile
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
-  PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1
 
-# 必要に応じてビルド依存パッケージを調整
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  build-essential libpq-dev curl ca-certificates \
-  && rm -rf /var/lib/apt/lists/*
+    build-essential libpq-dev curl ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+WORKDIR /code
 
-# 依存関係
-COPY app/requirements.txt .
+# 依存関係（リポ直下の requirements.txt を参照）
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt \
-  && pip install --no-cache-dir uwsgi
+ && pip install --no-cache-dir uwsgi
 
-# アプリ本体
-COPY app/ ./
+# プロジェクト一式
+COPY . /code
 
-# 静的/メディア出力先（共有ボリューム）
+# 静的/メディア
 RUN mkdir -p /static /media
-
-# CMD は compose 側で uwsgi を起動
