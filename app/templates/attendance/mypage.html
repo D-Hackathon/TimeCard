@@ -2,9 +2,11 @@
 {% load static %}
 {% block title %}マイページ{% endblock %}
 {% block page_title %}マイページ{% endblock %}
+
 {% block page_css %}
 <link rel="stylesheet" href="{% static 'css/attendance/mypage.css' %}">
 {% endblock %}
+
 {% block header_actions %}
     <a href="{% url 'attendance:profile' %}">
         <img src="{% static 'img/profile_icon.png' %}" width="50" height="50">

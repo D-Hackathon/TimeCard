@@ -2,6 +2,11 @@
 {% load static %}
 {% block title %}日次申請{% endblock %}
 {% block page_title %}<!--日付を出す-->{% endblock %}
+
+{% block page_css %}
+    <link rel="stylesheet" href="{% static 'css/attendance/daily_request.css' %}">
+{% endblock %}
+
 {% block header_actions %}
     <a href="{% url 'attendance:mypage' %}">
         <img src="{% static 'img/return_icon.png' %}" width="50" height="50">

@@ -103,3 +103,12 @@
     color: inherit;
     text-decoration: none;
 }
+
+#page-title {
+    position: absolute;
+    left: 45%;
+    top: 35px;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+}

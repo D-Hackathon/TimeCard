@@ -6,15 +6,17 @@ form {
 
 .form-row {
     display: grid;
-    grid-template-columns: 160px 520px;
+    grid-template-columns: 400px 1fr;
     align-items: center;
     gap: 24px;
     margin: 0 0 22px;
 }
 
 .form-row label {
-    font-size: 18px;
-    color: #000
+    font-size: 24px;
+    color: #000;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .form-row input[type="text"],
@@ -40,6 +42,7 @@ form {
     min-width: 120px;
     height: 44px;
     padding: 0 18px;
+    margin: 30px 0 0;
     border: none;
     background: #236CFF;
     color: #fff;
@@ -48,3 +51,17 @@ form {
     cursor: pointer;
 }
 
+#page-title {
+    position: absolute;
+    left: 45%;
+    top: 35px;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+}
+
+#return {
+    position: absolute;
+    right: 80px;
+    top: 35px;
+}

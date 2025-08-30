@@ -3,13 +3,17 @@
 
 {% block title %}社員変更・削除{% endblock %}
 {% block page_title %}社員変更・削除{% endblock %}
+
 {% block page_css %}
-<link rel="stylesheet" href="{% static 'css/admin/admin_edit_employee.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/admin_edit_employee.css' %}">
 {% endblock %}
+
 {% block header_actions %}
+<div id="return">
 <a href="{% url 'managers:admin_worklogs' %}">
     <img src="{% static 'img/return_icon.png' %}" width="50" height="50" alt="戻る">
 </a>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -22,13 +26,12 @@
 </ul>
 {% endif %}
 
-<form method="get" class="form-row">
+<form method="get" id="search">
         <label>社員検索</label>
         {{ search_form.employee_id }}
         {% if search_form.employee_id.errors %}
         <div>{{ search_form.employee_id.errors }}</div>
         {% endif %}
-    </div>
     {% if search_form.non_field_errors %}
     <div>{{ search_form.non_field_errors }}</div>
     {% endif %}
