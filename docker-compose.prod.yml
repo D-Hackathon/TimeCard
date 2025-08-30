@@ -5,8 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - DJANGO_SETTINGS_MODULE=config.settings.prod
     command: uwsgi --ini /code/uwsgi.ini
     working_dir: /code
     env_file:
