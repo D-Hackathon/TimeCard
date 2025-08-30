@@ -5,15 +5,14 @@ form {
 }
 
 .form-row {
-    display: block;
-    margin: 0 0 22px;
-}
-
-.form-row label {
     display: grid;
     grid-template-columns: 160px 520px;
     align-items: center;
     gap: 24px;
+    margin: 0 0 22px;
+}
+
+.form-row label {
     font-size: 18px;
     color: #000
 }
@@ -29,6 +28,7 @@ form {
     font-size: 16px;
     line-height: 1;
     outline: none;
+    box-sizing: border-box;
 }
 
 #registration {
