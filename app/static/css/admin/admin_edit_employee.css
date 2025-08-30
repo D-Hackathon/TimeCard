@@ -105,12 +105,12 @@ form[method="post"] p {
 }
 
 #page-title {
-position: absolute;
-left: 45%;
-top: 35px;
-font-size: 28px;
-font-weight: 700;
-text-align: center;
+    position: absolute;
+    left: 45%;
+    top: 35px;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
 }
 
 #return {
