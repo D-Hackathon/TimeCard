@@ -1,1 +1,38 @@
-version: '3.8' services: web: image: <ACCOUNT_ID>.dkr.ecr.ap-northeast-1.amazonaws.com/hatalog:latest command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 ports: - "80:8000" env_file: - .env.prod restart: always
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uwsgi --ini /code/uwsgi.ini
+    working_dir: /code
+    env_file:
+      - .env.prod
+    volumes:
+      - static:/static
+      - media:/media
+    expose:
+      - "3031"
+    restart: unless-stopped
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    volumes:
+      - static:/static:ro
+      - media:/media:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/healthz | grep -q ok || exit 1"]
+      interval: 10s
+      timeout: 2s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  static:
+  media:
