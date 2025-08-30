@@ -10,12 +10,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /code
 
-# 依存関係（リポ直下の requirements.txt を参照）
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt \
  && pip install --no-cache-dir uwsgi
 
-# 静的/メディア
 COPY . /code
 
 RUN mkdir -p /static /media
