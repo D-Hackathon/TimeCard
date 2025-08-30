@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block header_actions %}
-    <a href="{% url attendance:mypage %}">
+    <a href="{% url 'attendance:mypage' %}">
         <img src="{% static 'img/return_icon.png' %}" width="50" height="50">
     </a>
 {% endblock %}
@@ -16,24 +16,49 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
+        {% if messages %}
+        <div class="messages">
+            <ul>
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if form.errors %}
+        <div class="errorlist">
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
         <div>
             <label>メールアドレス(現在)</label>
-            <p>{{ request.user.email }}</p>
+            <input type="email" value="{{ request.user.email }}" disabled class="form-control">
         </div>
 
         <div>
             <label>メールアドレス(変更)</label>
-            <input type="email" name="<!--確認-->">
+            {{ form.email }}
         </div>
 
         <div>
             <label>パスワード 変更</label>
-            <input type="password" name="<!--確認-->">
+            {{ form.password }}
         </div>
 
         <div>
             <label>パスワード 確認</label>
-            <input type="password" name="<!--確認-->">
+            {{ form.password_confirm }}
         </div>
 
         <button type="submit">登録</button>

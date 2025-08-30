@@ -16,7 +16,7 @@ def is_manager(user):
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     form_class = ProfileForm
-    template_name = "attendance/profile_test.html"
+    template_name = "attendance/profile.html"
     success_url = reverse_lazy("attendance:profile")
 
     def get_object(self, queryset=None):
