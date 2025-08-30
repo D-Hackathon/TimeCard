@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: uwsgi --chdir /code/app --ini /code/app/uwsgi.ini
+    command: uwsgi --chdir /code/app --ini /code/uwsgi.ini
     working_dir: /code
     env_file:
       - .env.prod
